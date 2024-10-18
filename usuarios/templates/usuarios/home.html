@@ -60,7 +60,7 @@
             <div class="list-group list-group-flush">
                 <a href="{% url 'home' %}" class="list-group-item list-group-item-action">Home</a>
                 <a href="#" class="list-group-item list-group-item-action">Boletim</a>
-                <a href="#" class="list-group-item list-group-item-action">Frequência</a>
+                <a href="{% url 'listar_materias'%}" class="list-group-item list-group-item-action">Frequência</a>
                 <a href="{% url 'calendario' mes ano  %}" class="list-group-item list-group-item-action">Calendário</a>
                 <a href="{% url 'nova_solicitacao' %}" class="list-group-item list-group-item-action">Serviços</a>
                 <a href="{% url 'usuario' %}" class="list-group-item list-group-item-action">Dados Pessoais</a>
@@ -89,5 +89,7 @@
             document.getElementById("wrapper").classList.toggle("toggled");
         });
     </script>
+    {% comment %} sasda {% endcomment %}
 </body>
 </html>
+
