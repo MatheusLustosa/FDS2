@@ -64,22 +64,3 @@ class Evento(models.Model):
 
     def __str__(self):
         return f'{self.data} - {self.descricao}'
-    
-class Materia(models.Model):
-    nome = models.CharField(max_length=100)
-    descricao = models.TextField()
-
-    def __str__(self):
-        return self.nome
-    
-class RegistroFalta(models.Model):
-    aluno = models.ForeignKey(Usuario, on_delete=models.CASCADE)
-    materia = models.ForeignKey(Materia, on_delete=models.CASCADE)
-    data = models.DateField(default=timezone.now)
-    faltas = models.IntegerField(default=0)
-
-class Nota(models.Model):
-    aluno = models.ForeignKey(Usuario, on_delete=models.CASCADE)
-    materia = models.ForeignKey(Materia, on_delete=models.CASCADE)
-    nota = models.DecimalField(max_digits=5, decimal_places=2)
-    data = models.DateField(default=timezone.now)
