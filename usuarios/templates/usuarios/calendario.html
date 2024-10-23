@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendário Escolar</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        #wrapper {
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+        #sidebar-wrapper {
+            min-height: 100vh;
+            margin-left: -250px;
+            transition: margin 0.25s ease-out;
+            background-color: #343a40;
+        }
+        #sidebar-wrapper .list-group {
+            width: 250px;
+        }
+        #page-content-wrapper {
+            width: 100%;
+            padding: 20px;
+            overflow: auto; /* Permite rolagem se necessário */
+        }
+        #wrapper.toggled #sidebar-wrapper {
+            margin-left: 0;
+        }
+        .hamburger {
+            cursor: pointer;
+        }
+        .sidebar-heading {
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            font-size: 1.2rem;
+        }
+        .list-group-item {
+            color: white;
+            background-color: #343a40;
+        }
+        .list-group-item:hover {
+            background-color: #495057;
+        }
+        /*form #entrada {
+            z-index: 9999;
+            border: #17285E 2px solid;
+            border-radius: 5px;
+            width: 50;
+            margin-top: 100px;
+        }*/
+        form button {
+            margin-top: 10px;
+            background-color: F9F6EE;
+            border: none;
+            width: 20%;
+            border-radius: 5px;
+            padding: 10px;
+            font-weight: bold;
+            color: #17285E;
+            transition: all .3s;
+        }
+
+        form input {
+            text-decoration: none;
+            border-radius: 5px;
+
+        }
+
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr); /* 7 colunas para os dias da semana */
+            gap: 1px; /* Espaçamento entre os dias */
+            max-width: 100%;
+            overflow: auto; /* Permite rolagem horizontal se necessário */
+        }
+        .calendar .day {
+            transition: 0.3s;
+            padding: 10px;
+            box-sizing: border-box;
+            border: 1px solid #ddd;
+            text-align: center;
+            min-height: 100px; /* Ajusta a altura mínima */
+            background-color: #f8f9fa;
+        }
+        .calendar .day:hover {
+            background-color: #E2DFD2; 
+        }
+        .calendar .day-header {
+            font-weight: bold;
+            background-color: #e9ecef;
+            border-bottom: 1px solid #ddd;
+        }
+        .calendar .day #descricao_evento {
+            font-size: small;
+        }
+    </style>
+</head>
+<body>
+    <div id="wrapper">
+        <!-- Sidebar -->
+        <div id="sidebar-wrapper">
+            <div class="sidebar-heading">Menu</div>
+            <div class="list-group list-group-flush">
+                <a href="{% url 'home' %}" class="list-group-item list-group-item-action">Home</a>
+                <a href="{% url 'listar_materias'%}" class="list-group-item list-group-item-action">Frequência e Boletim</a>
+                <a href="{% url 'calendario' troca_mes troca_ano %}" class="list-group-item list-group-item-action">Calendário</a>
+                <a href="{% url 'nova_solicitacao' %}" class="list-group-item list-group-item-action">Serviços</a>
+                <a href="{% url 'usuario' %}" class="list-group-item list-group-item-action">Dados Pessoais</a>
+            </div>
+        </div>
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <div class="container-fluid">
+                    <span class="navbar-brand hamburger" id="menu-toggle">&#9776;</span>
+                </div>
+            </nav>
+            <div class="container-fluid">
+                <h1 class="mt-4">Calendário Escolar - {{ mes_nome }} {{ ano }}</h1>
+                    <form action="" method="post">
+                        <div class="d-flex justify-content-between">
+                        {% csrf_token %}
+                        <button class="btn btn-secondary" type="submit" id="mes-anterior" name="troca_mes" value="mes-anterior">Mês Anterior</button>
+                        <button class="btn btn-secondary" type="submit" id="mes-posterior" name="troca_mes" value="mes-posterior">Próximo Mês</button>
+                        </div>
+                    </form>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="entrada" id="entrada">
+                        <input type="date" name="data" id="data" placeholder="Data do evento" required>
+                        <input type="text" name="descricao" id="descricao" placeholder="Título do evento" required>
+                        <button type="submit" name="novo_evento" >Registre um novo evento</button>
+                    </div>
+                <div class="calendar">
+                    <div class="day day-header">Seg</div>
+                    <div class="day day-header">Ter</div>
+                    <div class="day day-header">Qua</div>
+                    <div class="day day-header">Qui</div>
+                    <div class="day day-header">Sex</div>
+                    <div class="day day-header">Sáb</div>
+                    <div class="day day-header">Dom</div>
+
+                    {% for semana in dias %}
+                        {% for dia in semana %}
+                            <div class="day" id="rect" onclick="">
+                                {% if dia != 0 %}
+                                    {{ dia }}
+                                    {% for evento in eventos %}
+                                        {% if dia == evento.dia and mes == evento.mes and ano == evento.ano %}
+                                            <p id="descricao_evento">{{ evento.descricao }}</p>
+                                        {% endif %}
+                                    {% empty %}
+
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                        {% endfor %}    
+                    {% endfor %}
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Toggle sidebar
+        document.getElementById("menu-toggle").addEventListener("click", function() {
+            document.getElementById("wrapper").classList.toggle("toggled");
+        });
+    </script>
+</body>
+</html>
