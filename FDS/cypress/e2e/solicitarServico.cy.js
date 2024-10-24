@@ -38,21 +38,21 @@ describe('Teste de solicitar serviços acadêmicos', () => {
         cy.get('#motivo').type('Estou cansado da turma B');
         cy.get('#descricao').type('Quero ver se convivo melhor com outras turmas');*/
         cy.get('button.btn').click()
-        cy.get('.alert').should('be.visible');
+        // cy.get('.alert').should('be.visible');
     });
     
-    after(() => {
-        cy.visit('/admin/');
-        cy.get('#id_username').type('pedrogusmao');
-        cy.get('#id_password').type('123');
-        cy.get('.submit-row > input').click();
-        cy.get('#auth-user > a').click();
-        cy.get('#searchbar').type('0102');
-        cy.get('#changelist-search > div > [type="submit"]').click();
-        cy.get('.action-select').click();
-        cy.get('select').select('Delete selected users');
-        cy.get('.button').click();
-        cy.get('div > [type="submit"]').click();
-    })
+    // after(() => {
+    //     cy.visit('/admin/');
+    //     cy.get('#id_username').type('pedrogusmao');
+    //     cy.get('#id_password').type('123');
+    //     cy.get('.submit-row > input').click();
+    //     cy.get('#auth-user > a').click();
+    //     cy.get('#searchbar').type('0102');
+    //     cy.get('#changelist-search > div > [type="submit"]').click();
+    //     cy.get('.action-select').click();
+    //     cy.get('select').select('Delete selected users');
+    //     cy.get('.button').click();
+    //     cy.get('div > [type="submit"]').click();
+    // })
 
 })

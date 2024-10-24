@@ -273,7 +273,20 @@ def adicionar_faltas(request, materia_id):
         # Capture os dados do formulário
         aluno_id = request.POST.get('aluno')  # O ID do aluno que receberá a falta
         faltas = int(request.POST.get('faltas', 0))  # A quantidade de faltas a serem atribuídas
-        data = timezone.now().date()  # Usa a data atual
+
+        # Verifica se o número de faltas é válido
+        if faltas < 0:
+            error_message = "O número de faltas não pode ser negativo."
+            alunos = Usuario.objects.filter(tipo_usuario='aluno')  # Filtra apenas alunos
+            return render(request, 'usuarios/adicionar_faltas.html', {
+                'materia_id': materia_id,
+                'materia': materia,
+                'alunos': alunos,
+                'error_message': error_message
+            })
+
+        # Usa a data atual
+        data = timezone.now().date()
 
         # Cria um novo registro de falta
         RegistroFalta.objects.create(aluno_id=aluno_id, materia=materia, data=data, faltas=faltas)
@@ -287,7 +300,7 @@ def adicionar_faltas(request, materia_id):
         'materia': materia,
         'alunos': alunos
     })
-
+    
 @login_required
 def adicionar_notas(request, materia_id):
     # Verifica se o usuário logado é um professor

@@ -28,9 +28,11 @@ jobs:
           source venv/bin/activate
       
       - name: Install dependencies
-        run: 
+        run: |
+          cd FDS/
           pip install -r requirements.txt
           npm ci
+          cd ..
         
       - name: Run local server
         run: |
@@ -42,6 +44,7 @@ jobs:
     
       - name: Cleaning testing files
         run: |
+          cd FDS/
           rm .env
           rm -f db.sqlite3
           rm cypress.config.js
@@ -49,9 +52,14 @@ jobs:
           rm package.json
           rm -rf cypress
           rm -rf node_modules
+          cd ..
           
       - name: Zip artifact for deployment
-        run: zip release.zip ./* -r
+        run: |
+          cd FDS/
+          zip release.zip ./* -r
+          cd ..
+          mv FDS/release.zip 
         
           
       - name: Upload artifact for deployment jobs

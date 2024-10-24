@@ -78,20 +78,27 @@
                         <label for="aluno" class="form-label">Selecione o Aluno</label>
                         <select class="form-select" id="aluno" name="aluno" required>
                             {% for aluno in alunos %}
-                                <option value="{{ aluno.id }}">{{ aluno.nome}}</option>
+                                <option value="{{ aluno.id }}">{{ aluno.nome }}</option>
                             {% endfor %}
                         </select>
                     </div>
                     <div class="mb-3">  
                         <label for="faltas" class="form-label">Número de Faltas</label>
-                        <input type="number" class="form-control" id="faltas" name="faltas" min="0" required>
+                        <input type="number" class="form-control" id="faltas" name="faltas" min="0" >
                     </div>
+
+                    {% if error_message %}
+                        <div class="alert alert-danger" role="alert">
+                    {{ error_message }}
+                     </div>
+                     {% endif %}
+
+
                     <button type="submit" class="btn btn-primary">Adicionar Faltas</button>
                 </form>
             </div>
         </div>
     </div>
-
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
