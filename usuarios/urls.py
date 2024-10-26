@@ -3,7 +3,7 @@ from .views import login_view, cadastro_view , home_view , documentos_view, usua
 from django.conf.urls.static import static
 from django.conf import settings
 from . import views
-from .views import listar_materias,adicionar_faltas
+from .views import listar_materias,adicionar_faltas,criar_aviso
 
 urlpatterns = [
     path('', login_view, name='login'),
@@ -17,6 +17,7 @@ urlpatterns = [
     path('materias/', listar_materias, name='listar_materias'),
     path('materias/adicionar_faltas/<int:materia_id>/', adicionar_faltas, name='adicionar_faltas'),
     path('materias/adicionar_notas/<int:materia_id>/', views.adicionar_notas, name='adicionar_notas'),
+    path('criar-aviso/', criar_aviso, name='criar_aviso'),
 ]
 
 

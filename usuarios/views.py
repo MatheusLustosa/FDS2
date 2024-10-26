@@ -16,7 +16,7 @@ from .models import RegistroFalta, Usuario
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Materia, Usuario
 from django.contrib.auth.decorators import login_required
-from .models import Materia, Usuario, RegistroFalta,Nota
+from .models import Materia, Usuario, RegistroFalta,Nota,AvisoAcademico
 
 def login_view(request):
     if request.method == 'POST':
@@ -71,10 +71,27 @@ def cadastro_view(request):
     
 import calendar
 
-def home_view(request) :
+@login_required
+def home_view(request):
+    # Informações do usuário
+    usuario = request.user.usuario.first()  # Supondo que você tem um relacionamento User -> Usuario
+    is_aluno = usuario.tipo_usuario == 'aluno' if usuario else False
+
+    # Data atual
     mes = datetime.now().month
-    ano =  datetime.now().year
-    context = {'mes': mes, 'ano': ano }
+    ano = datetime.now().year
+    
+    # Buscar avisos acadêmicos ativos
+    avisos = AvisoAcademico.objects.filter(ativo=True).order_by('-data_criacao')
+    
+    # Adicionar todos os dados ao contexto
+    context = {
+        'mes': mes,
+        'ano': ano,
+        'avisos': avisos,
+        'is_aluno': is_aluno,
+    }
+    
     return render(request, 'usuarios/home.html', context)
 
 def documentos_view(request) :
@@ -332,3 +349,31 @@ def visualizar_faltas(request):
     return render(request, 'usuarios/visualizar_faltas.html', {
         'registros_faltas': registros_faltas
     })
+
+@login_required
+def criar_aviso(request):
+    usuario = request.user.usuario.first()  # Acesse o objeto Usuario associado ao User
+    is_aluno = usuario.tipo_usuario == 'aluno' if usuario else False  # Verifica se é aluno
+    
+    # Se for aluno, redireciona para uma página apropriada
+    if is_aluno:
+        return redirect('home')  # Ou a página que você desejar
+
+    if request.method == "POST":
+        titulo = request.POST.get('titulo')
+        conteudo = request.POST.get('conteudo')
+        data_exibicao = request.POST.get('data_exibicao')
+        ativo = request.POST.get('ativo') == 'on'  # Converte para booleano
+
+        # Criar e salvar o aviso
+        AvisoAcademico.objects.create(
+            titulo=titulo,
+            conteudo=conteudo,
+            data_exibicao=data_exibicao,
+            ativo=ativo,
+            professor=request.user  # Supondo que o professor é o usuário logado
+        )
+        return redirect('home')  # Redireciona após criar o aviso
+
+    return render(request, 'usuarios/criar_aviso.html', {'is_aluno': is_aluno})
+
