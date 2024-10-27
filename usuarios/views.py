@@ -76,7 +76,7 @@ def home_view(request):
     # Informações do usuário
     usuario = request.user.usuario.first()  # Supondo que você tem um relacionamento User -> Usuario
     is_aluno = usuario.tipo_usuario == 'aluno' if usuario else False
-
+    is_professor = usuario.tipo_usuario == 'professor' if usuario else False
     # Data atual
     mes = datetime.now().month
     ano = datetime.now().year
@@ -90,6 +90,7 @@ def home_view(request):
         'ano': ano,
         'avisos': avisos,
         'is_aluno': is_aluno,
+        'is_professor': is_professor,
     }
     
     return render(request, 'usuarios/home.html', context)
@@ -264,14 +265,7 @@ def listar_materias(request):
 
 @login_required
 def listar_materias(request):
-    # Acessa o perfil do usuário, assumindo que há um modelo relacionado
-    try:
-        usuario = request.user.usuario.first()  # Altere se a relação for diferente
-        if usuario is None:
-            return redirect('some-error-page')  # Redirecione se o usuário não tiver perfil
-    except AttributeError:
-        return redirect('some-error-page')  # Trata o erro se 'usuario' não existir
-
+    usuario = request.user.usuario.first()  # Acessa o objeto do usuário
     materias = Materia.objects.all()  # Substitua conforme necessário
     registros_faltas = RegistroFalta.objects.filter(aluno=usuario)
     notas = Nota.objects.filter(aluno=usuario)  # Assumindo que há um modelo Nota com relação ao aluno
@@ -280,7 +274,7 @@ def listar_materias(request):
         'materias': materias,
         'registros_faltas': registros_faltas,
         'notas': notas,  # Passa as notas para o template
-        'is_professor': usuario.tipo_usuario == 'professor' if usuario else False,  # Verifica se é professor
+        'is_professor': usuario.tipo_usuario == 'professor',  # Para verificar se é professor
     })
 @login_required
 def adicionar_faltas(request, materia_id):
