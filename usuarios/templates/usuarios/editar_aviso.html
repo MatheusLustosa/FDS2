@@ -5,10 +5,9 @@
     <link rel="icon" href="{% static 'alpha.ico' %}" type="image/x-icon">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sidebar Dinâmica</title>
+    <title>Editar Aviso Acadêmico</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Custom CSS -->
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -49,9 +48,6 @@
         .list-group-item:hover {
             background-color: #495057;
         }
-        #link_profile {
-            margin-left: 1350px;
-        }
     </style>
 </head>
 <body>
@@ -59,13 +55,13 @@
         <!-- Sidebar -->
         <div id="sidebar-wrapper">
             <div align="center">
-            <img src="{% static 'alphag.gif' %}" width="150px" alt="Descrição do GIF" />
+                <img src="{% static 'alphag.gif' %}" width="150px" alt="Descrição do GIF" />
             </div>
             <div class="sidebar-heading">Menu</div>
             <div class="list-group list-group-flush">
                 <a href="{% url 'home' %}" class="list-group-item list-group-item-action">Home</a>
                 <a href="{% url 'listar_materias' %}" class="list-group-item list-group-item-action">Frequência e Boletim</a>
-                <a href="{% url 'calendario' mes ano %}" class="list-group-item list-group-item-action">Calendário</a>
+                <a href="{% url 'home' %}" class="list-group-item list-group-item-action">Calendário</a>
                 <a href="{% url 'nova_solicitacao' %}" class="list-group-item list-group-item-action">Serviços</a>
                 <a href="{% url 'usuario' %}" class="list-group-item list-group-item-action">Dados Pessoais</a>
             </div>
@@ -78,37 +74,35 @@
                 </div>
             </nav>
             <div class="container-fluid">
-                
-                <h1>Bem-vindo, {{ user.first_name }}!</h1>
-
-                <!-- Botão para criar aviso -->
-                {% if not is_aluno %}
-                <a href="{% url 'criar_aviso' %}" class="btn btn-primary mb-3">Criar Aviso</a>
-                {% endif %}
-               
-                <h2>Avisos Acadêmicos:</h2>
-                <ul>
-                    {% for aviso in avisos %}
-                    <li>
-                        <strong>{{ aviso.titulo }}:</strong><br>
-                        {{ aviso.conteudo }} <br>
-                        Data de emissão: {{ aviso.data_criacao }}
-            
-                        {% if not is_aluno %}
-                            <a href="{% url 'editar_aviso' aviso.id %}" class="btn btn-warning btn-sm">Editar</a>
-                            <a href="{% url 'excluir_aviso' aviso.id %}" class="btn btn-danger btn-sm" onclick="return confirm('Tem certeza de que deseja excluir este aviso?');">Excluir</a>
-                        {% endif %}
-                    </li>
-                    {% empty %}
-                        <li>Não há avisos acadêmicos no momento.</li>
-                    {% endfor %}
-                </ul>
-
-                <p>Mês: {{ mes }} | Ano: {{ ano }}</p>
+                <h1>Editar Aviso Acadêmico</h1>
+                <!-- Formulário de Edição de Aviso -->
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="titulo" class="form-label">Título:</label>
+                        <input type="text" class="form-control" id="titulo" name="titulo" value="{{ aviso.titulo }}" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="conteudo" class="form-label">Conteúdo:</label>
+                        <textarea class="form-control" id="conteudo" name="conteudo" required>{{ aviso.conteudo }}</textarea>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="data_exibicao" class="form-label">Data de Exibição:</label>
+                        <input type="date" class="form-control" id="data_exibicao" name="data_exibicao" value="{{ aviso.data_exibicao|date:'Y-m-d' }}" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="ativo" class="form-check-label">Ativo:</label>
+                        <input type="checkbox" id="ativo" name="ativo" class="form-check-input" {% if aviso.ativo %}checked{% endif %}>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-success">Salvar Alterações</button>
+                </form>
             </div>
         </div>
     </div>
-
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>

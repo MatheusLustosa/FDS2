@@ -17,6 +17,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import Materia, Usuario
 from django.contrib.auth.decorators import login_required
 from .models import Materia, Usuario, RegistroFalta,Nota,AvisoAcademico
+from django.shortcuts import get_object_or_404
 
 def login_view(request):
     if request.method == 'POST':
@@ -378,3 +379,19 @@ def criar_aviso(request):
 
     return render(request, 'usuarios/criar_aviso.html', {'is_aluno': is_aluno})
 
+@login_required
+def editar_aviso(request, aviso_id):
+    aviso = get_object_or_404(AvisoAcademico, id=aviso_id, professor=request.user)
+    if request.method == "POST":
+        aviso.titulo = request.POST.get('titulo')
+        aviso.conteudo = request.POST.get('conteudo')
+        aviso.data_exibicao = request.POST.get('data_exibicao')
+        aviso.ativo = request.POST.get('ativo') == 'on'
+        aviso.save()
+        return redirect('home')
+    return render(request, 'usuarios/editar_aviso.html', {'aviso': aviso})
+@login_required
+def excluir_aviso(request, aviso_id):
+    aviso = get_object_or_404(AvisoAcademico, id=aviso_id, professor=request.user)
+    aviso.delete()
+    return redirect('home')

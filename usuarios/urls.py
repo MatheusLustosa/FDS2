@@ -18,6 +18,8 @@ urlpatterns = [
     path('materias/adicionar_faltas/<int:materia_id>/', adicionar_faltas, name='adicionar_faltas'),
     path('materias/adicionar_notas/<int:materia_id>/', views.adicionar_notas, name='adicionar_notas'),
     path('criar-aviso/', criar_aviso, name='criar_aviso'),
+    path('editar_aviso/<int:aviso_id>/', views.editar_aviso, name='editar_aviso'),
+    path('excluir_aviso/<int:aviso_id>/', views.excluir_aviso, name='excluir_aviso'),
 ]
 
 
