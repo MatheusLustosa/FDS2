@@ -94,3 +94,14 @@ class AvisoAcademico(models.Model):
 
     def __str__(self):
         return self.titulo
+    
+    from django.db import models
+
+class Horario(models.Model):
+    materia = models.ForeignKey(Materia, on_delete=models.CASCADE, related_name='horarios')
+    dia = models.CharField(max_length=20)  # Ex: "Segunda", "Terça", etc.
+    hora_inicio = models.TimeField()
+    hora_fim = models.TimeField()
+
+    def __str__(self):
+        return f"{self.materia.nome} - {self.dia}: {self.hora_inicio} às {self.hora_fim}"

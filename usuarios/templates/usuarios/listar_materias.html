@@ -63,11 +63,10 @@
         <div id="sidebar-wrapper">
             <div align="center">
                 <img src="{% static 'alphag.gif' %}" width="150px" alt="Descrição do GIF" />
-                </div>
+            </div>
             <div class="sidebar-heading">Menu</div>
             <div class="list-group list-group-flush">
                 <a href="{% url 'home' %}" class="list-group-item list-group-item-action">Home</a>
-<!--                 <a href="#" class="list-group-item list-group-item-action">Boletim</a> -->
                 <a href="#" class="list-group-item list-group-item-action">Frequência e Boletim</a>
                 <a href="{% url 'home' %}" class="list-group-item list-group-item-action">Calendário</a>
                 <a href="{% url 'nova_solicitacao' %}" class="list-group-item list-group-item-action">Serviços</a>
@@ -89,14 +88,26 @@
                         <li class="list-group-item">
                             <h3>{{ materia.nome }}</h3>
                             <p>{{ materia.descricao }}</p>
-    
+
                             {% if is_professor %}
                                 <div>
+                                    <a href="{% url 'adicionar_horario' materia.id %}" class="btn btn-info btn-sm">Adicionar Horário</a>
                                     <a href="{% url 'adicionar_faltas' materia.id %}" class="btn btn-warning btn-sm">Adicionar Faltas</a>
                                     <a href="{% url 'adicionar_notas' materia.id %}" class="btn btn-success btn-sm">Adicionar Notas</a>
                                 </div>
                             {% endif %}
+
+                            <h4>Horários:</h4>
+                            <ul>
+                                {% for horario in materia.horarios.all %}
+                                    <li>{{ horario.dia }}: {{ horario.hora_inicio }} - {{ horario.hora_fim }}</li>
+                                {% empty %}
+                                    <li>Não há horários cadastrados.</li>
+                                {% endfor %}
+                            </ul>
                         </li>
+                    {% empty %}
+                        <li class="list-group-item">Nenhuma matéria cadastrada.</li>
                     {% endfor %}
                 </ul>
                 
@@ -107,7 +118,6 @@
                             <th>Data</th>
                             <th>Matéria</th>
                             <th>Faltas</th>
-                            
                         </tr>
                     </thead>
                     <tbody>
@@ -143,7 +153,7 @@
                         </tr>
                         {% empty %}
                         <tr>
-                            <td colspan="2">Nenhuma nota registrada.</td>
+                            <td colspan="3">Nenhuma nota registrada.</td>
                         </tr>
                         {% endfor %}
                     </tbody>

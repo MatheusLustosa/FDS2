@@ -395,3 +395,22 @@ def excluir_aviso(request, aviso_id):
     aviso = get_object_or_404(AvisoAcademico, id=aviso_id, professor=request.user)
     aviso.delete()
     return redirect('home')
+
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Materia, Horario
+from django.contrib.auth.decorators import login_required
+
+@login_required
+def adicionar_horario(request, materia_id):
+    materia = get_object_or_404(Materia, id=materia_id)
+
+    if request.method == 'POST':
+        dia = request.POST['dia']
+        hora_inicio = request.POST['hora_inicio']
+        hora_fim = request.POST['hora_fim']
+        
+        # Cria um novo horário
+        Horario.objects.create(materia=materia, dia=dia, hora_inicio=hora_inicio, hora_fim=hora_fim)
+        return redirect('listar_materias')  # Redireciona para a página de matérias
+
+    return render(request, 'usuarios/adicionar_horario.html', {'materia': materia})

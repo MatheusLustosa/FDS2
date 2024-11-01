@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import login_view, cadastro_view , home_view , documentos_view, usuario_view, notificacoes, nova_solicitacao
+from .views import login_view, cadastro_view ,adicionar_horario, home_view , documentos_view, usuario_view, notificacoes, nova_solicitacao
 from django.conf.urls.static import static
 from django.conf import settings
 from . import views
@@ -20,6 +20,7 @@ urlpatterns = [
     path('criar-aviso/', criar_aviso, name='criar_aviso'),
     path('editar_aviso/<int:aviso_id>/', views.editar_aviso, name='editar_aviso'),
     path('excluir_aviso/<int:aviso_id>/', views.excluir_aviso, name='excluir_aviso'),
+    path('materias/<int:materia_id>/adicionar_horario/', adicionar_horario, name='adicionar_horario'),
 ]
 
 
