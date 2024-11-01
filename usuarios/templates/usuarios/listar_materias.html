@@ -89,6 +89,18 @@
                             <h3>{{ materia.nome }}</h3>
                             <p>{{ materia.descricao }}</p>
 
+                        
+
+                            <h4>Horários:</h4>
+                            <ul>
+                                {% for horario in materia.horarios.all %}
+                                    <li>{{ horario.dia }}: {{ horario.hora_inicio }} - {{ horario.hora_fim }}</li>
+                                    <h1> </h1>
+                                {% empty %}
+                                    <li>Não há horários cadastrados.</li>
+                                    <h1> </h1>
+                                {% endfor %}
+                            </ul>
                             {% if is_professor %}
                                 <div>
                                     <a href="{% url 'adicionar_horario' materia.id %}" class="btn btn-info btn-sm">Adicionar Horário</a>
@@ -96,15 +108,6 @@
                                     <a href="{% url 'adicionar_notas' materia.id %}" class="btn btn-success btn-sm">Adicionar Notas</a>
                                 </div>
                             {% endif %}
-
-                            <h4>Horários:</h4>
-                            <ul>
-                                {% for horario in materia.horarios.all %}
-                                    <li>{{ horario.dia }}: {{ horario.hora_inicio }} - {{ horario.hora_fim }}</li>
-                                {% empty %}
-                                    <li>Não há horários cadastrados.</li>
-                                {% endfor %}
-                            </ul>
                         </li>
                     {% empty %}
                         <li class="list-group-item">Nenhuma matéria cadastrada.</li>
