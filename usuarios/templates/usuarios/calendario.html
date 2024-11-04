@@ -10,6 +10,11 @@
     <style>
         body {
             font-family: Arial, sans-serif;
+            background-color: #e8eaf6;
+        }
+        .bg-light {
+            --bs-bg-opacity: 1;
+            background-color: #e8eaf6 !important;
         }
         #wrapper {
             display: flex;
@@ -101,6 +106,7 @@
         .calendar .day #descricao_evento {
             font-size: small;
         }
+        
     </style>
 </head>
 <body>
@@ -140,7 +146,7 @@
                     <div class="entrada" id="entrada">
                         <input type="date" name="data" id="data" placeholder="Data do evento" required>
                         <input type="text" name="descricao" id="descricao" placeholder="Título do evento" required>
-                        <button type="submit" name="novo_evento" >Registre um novo evento</button>
+                        <button class="btn btn-secondary" type="submit" name="novo_evento" >Registre um novo evento</button>
                     </div>
                 <div class="calendar">
                     <div class="day day-header">Seg</div>

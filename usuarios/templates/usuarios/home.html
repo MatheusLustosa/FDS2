@@ -12,6 +12,11 @@
     <style>
         body {
             font-family: Arial, sans-serif;
+            background-color: #e8eaf6;
+        }
+        .bg-light {
+            --bs-bg-opacity: 1;
+            background-color: #e8eaf6 !important;
         }
         #wrapper {
             display: flex;
@@ -49,6 +54,13 @@
         .list-group-item:hover {
             background-color: #495057;
         }
+        .card {
+            background-color: #343a40; /* Fundo do cartão */
+            color: white; /* Cor do texto */
+        }
+        .card-title {
+            color: white; /* Cor do título */
+        }
         #link_profile {
             margin-left: 1350px;
         }
@@ -59,7 +71,7 @@
         <!-- Sidebar -->
         <div id="sidebar-wrapper">
             <div align="center">
-            <img src="{% static 'alphag.gif' %}" width="150px" alt="Descrição do GIF" />
+                <img src="{% static 'alphag.gif' %}" width="150px" alt="Descrição do GIF" />
             </div>
             <div class="sidebar-heading">Menu</div>
             <div class="list-group list-group-flush">
@@ -78,7 +90,6 @@
                 </div>
             </nav>
             <div class="container-fluid">
-                
                 <h1>Bem-vindo, {{ user.first_name }}!</h1>
 
                 <!-- Botão para criar aviso -->
@@ -87,24 +98,33 @@
                 {% endif %}
                
                 <h2>Avisos Acadêmicos:</h2>
-                <ul>
-                    {% for aviso in avisos %}
-                    <li>
-                        <strong>{{ aviso.titulo }}:</strong><br>
-                        {{ aviso.conteudo }} <br>
-                        Data de emissão: {{ aviso.data_criacao }}
-            
-                        {% if not is_aluno %}
-                            <a href="{% url 'editar_aviso' aviso.id %}" class="btn btn-warning btn-sm">Editar</a>
-                            <a href="{% url 'excluir_aviso' aviso.id %}" class="btn btn-danger btn-sm" onclick="return confirm('Tem certeza de que deseja excluir este aviso?');">Excluir</a>
-                        {% endif %}
-                    </li>
-                    {% empty %}
-                        <li>Não há avisos acadêmicos no momento.</li>
-                    {% endfor %}
-                </ul>
-
-                <p>Mês: {{ mes }} | Ano: {{ ano }}</p>
+                
+                <div class="overflow-auto">
+                    <div class="d-flex flex-nowrap">
+                        {% for aviso in avisos %}
+                        <div class="card me-3" style="min-width: 300px;">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ aviso.titulo }}</h5>
+                                <p class="card-text">{{ aviso.conteudo }}</p>
+                                <small>Data de emissão: {{ aviso.data_criacao }}</small>
+                                {% if not is_aluno %}
+                                    <div class="mt-2">
+                                        <a href="{% url 'editar_aviso' aviso.id %}" class="btn btn-warning btn-sm">Editar</a>
+                                        <a href="{% url 'excluir_aviso' aviso.id %}" class="btn btn-danger btn-sm" onclick="return confirm('Tem certeza de que deseja excluir este aviso?');">Excluir</a>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% empty %}
+                            <div class="card" style="min-width: 300px;">
+                                <div class="card-body">
+                                    <p>Não há avisos acadêmicos no momento.</p>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <p style="font-weight: bold; font-size: 1.2rem; margin-top: 20px;">Mês: {{ mes }} | Ano: {{ ano }}</p>
             </div>
         </div>
     </div>

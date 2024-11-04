@@ -12,7 +12,12 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            overflow: hidden; /* Impede o scroll da página */
+            background-color: #e8eaf6;
+            overflow: hidden;
+        }
+        .bg-light {
+            --bs-bg-opacity: 1;
+            background-color: #e8eaf6 !important;
         }
         #wrapper {
             display: flex;
@@ -52,8 +57,16 @@
         .list-group-item:hover {
             background-color: #495057;
         }
-        #link_profile {
-            margin-left: 1350px;
+        .card {
+            background-color: #343a40; /* Fundo do cartão */
+            color: white; /* Cor do texto */
+        }
+        .card h5, .card h6 {
+            color: white; /* Cor dos títulos */
+        }
+        .alert-warning {
+            background-color: #f8d7da; /* Cor do alerta de aviso */
+            color: #721c24; /* Cor do texto do alerta */
         }
     </style>
 </head>
@@ -82,37 +95,38 @@
             </nav>
             <div class="container-fluid">
                 <h1 class="mt-4">Matérias</h1>
-                <ul class="list-group">
+                <div class="row">
                     <!-- Exibindo as matérias dinamicamente -->
                     {% for materia in materias %}
-                        <li class="list-group-item">
-                            <h3>{{ materia.nome }}</h3>
-                            <p>{{ materia.descricao }}</p>
-
-                        
-
-                            <h4>Horários:</h4>
-                            <ul>
-                                {% for horario in materia.horarios.all %}
-                                    <li>{{ horario.dia }}: {{ horario.hora_inicio }} - {{ horario.hora_fim }}</li>
-                                    <h1> </h1>
-                                {% empty %}
-                                    <li>Não há horários cadastrados.</li>
-                                    <h1> </h1>
-                                {% endfor %}
-                            </ul>
-                            {% if is_professor %}
-                                <div>
-                                    <a href="{% url 'adicionar_horario' materia.id %}" class="btn btn-info btn-sm">Adicionar Horário</a>
-                                    <a href="{% url 'adicionar_faltas' materia.id %}" class="btn btn-warning btn-sm">Adicionar Faltas</a>
-                                    <a href="{% url 'adicionar_notas' materia.id %}" class="btn btn-success btn-sm">Adicionar Notas</a>
+                        <div class="col-md-4 mb-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ materia.nome }}</h5>
+                                    <p class="card-text">{{ materia.descricao }}</p>
+                                    <h6>Horários:</h6>
+                                    <ul>
+                                        {% for horario in materia.horarios.all %}
+                                            <li>{{ horario.dia }}: {{ horario.hora_inicio }} - {{ horario.hora_fim }}</li>
+                                        {% empty %}
+                                            <li>Não há horários cadastrados.</li>
+                                        {% endfor %}
+                                    </ul>
+                                    {% if is_professor %}
+                                        <div>
+                                            <a href="{% url 'adicionar_horario' materia.id %}" class="btn btn-info btn-sm">Adicionar Horário</a>
+                                            <a href="{% url 'adicionar_faltas' materia.id %}" class="btn btn-warning btn-sm">Adicionar Faltas</a>
+                                            <a href="{% url 'adicionar_notas' materia.id %}" class="btn btn-success btn-sm">Adicionar Notas</a>
+                                        </div>
+                                    {% endif %}
                                 </div>
-                            {% endif %}
-                        </li>
+                            </div>
+                        </div>
                     {% empty %}
-                        <li class="list-group-item">Nenhuma matéria cadastrada.</li>
+                        <div class="col-md-12">
+                            <div class="alert alert-warning">Nenhuma matéria cadastrada.</div>
+                        </div>
                     {% endfor %}
-                </ul>
+                </div>
                 
                 <h2 class="mt-4">Minhas Faltas</h2>
                 <table class="table table-striped">
