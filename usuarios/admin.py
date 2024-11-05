@@ -15,3 +15,12 @@ admin.site.register(Evento)
 class MateriaAdmin(admin.ModelAdmin):
     list_display = ('nome', 'descricao')  # Exibe o nome e a descrição no admin
     search_fields = ('nome',)  # Adiciona um campo de busca por nome
+from django.contrib import admin
+from .models import Horario
+
+class HorarioAdmin(admin.ModelAdmin):
+    list_display = ('materia', 'dia', 'hora_inicio', 'hora_fim')
+    list_filter = ('materia', 'dia')
+    search_fields = ('materia__nome', 'dia')
+
+admin.site.register(Horario, HorarioAdmin)
