@@ -9,19 +9,24 @@
 <body>
     <div class="container">
         <h1>Adicionar Horário</h1>
+        {% if error_message %}
+        <div class="alert alert-danger" role="alert">
+            {{ error_message }}
+        </div>
+        {% endif %}
         <form method="post">
             {% csrf_token %}
             <div class="mb-3">
                 <label for="dia" class="form-label">Dia</label>
-                <input type="text" class="form-control" id="dia" name="dia" required>
+                <input type="text" class="form-control" id="dia" name="dia" >
             </div>
             <div class="mb-3">
                 <label for="hora_inicio" class="form-label">Hora de Início</label>
-                <input type="time" class="form-control" id="hora_inicio" name="hora_inicio" required>
+                <input type="time" class="form-control" id="hora_inicio" name="hora_inicio" >
             </div>
             <div class="mb-3">
                 <label for="hora_fim" class="form-label">Hora de Fim</label>
-                <input type="time" class="form-control" id="hora_fim" name="hora_fim" required>
+                <input type="time" class="form-control" id="hora_fim" name="hora_fim" >
             </div>
             <button type="submit" class="btn btn-primary">Adicionar Horário</button>
         </form>
