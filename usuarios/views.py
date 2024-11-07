@@ -403,14 +403,18 @@ from django.contrib.auth.decorators import login_required
 @login_required
 def adicionar_horario(request, materia_id):
     materia = get_object_or_404(Materia, id=materia_id)
-
+    error_message = False
+    
     if request.method == 'POST':
         dia = request.POST['dia']
         hora_inicio = request.POST['hora_inicio']
         hora_fim = request.POST['hora_fim']
         
+        if not dia or not hora_inicio or not hora_fim:
+            error_message = 'Deve-se preencher todos os campos'
+            return render(request, 'usuarios/adicionar_horario.html', {'materia': materia, 'error_message': error_message})
         # Cria um novo horário
         Horario.objects.create(materia=materia, dia=dia, hora_inicio=hora_inicio, hora_fim=hora_fim)
         return redirect('listar_materias')  # Redireciona para a página de matérias
 
-    return render(request, 'usuarios/adicionar_horario.html', {'materia': materia})
+    return render(request, 'usuarios/adicionar_horario.html', {'materia': materia, 'error_message': error_message})
