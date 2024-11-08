@@ -34,14 +34,14 @@ describe('Teste de registrar presença/falta dos alunos e consultar faltas', () 
     beforeEach(() => {
         cy.visit('/');
         cy.get('form > :nth-child(2) > input').type('1212');
-        cy.get(':nth-child(3) > input').type('123');
+        cy.get('form > :nth-child(3) > input').type('123');
         cy.get('button').click();
         cy.get('#menu-toggle').click();
         cy.get('[href="/materias/"]').click();
     })
 
     it('Número de faltas menor que zero', () => {
-        cy.get(':nth-child(1) > div > .btn-warning').click()
+        cy.get(':nth-child(1) > .card > .card-body > div > .btn-warning').click()
         cy.get('#aluno').select('Pedro');
         cy.get('#faltas').type(-1);
         cy.get('.btn').click();
@@ -49,7 +49,7 @@ describe('Teste de registrar presença/falta dos alunos e consultar faltas', () 
     })
 
     it('Número de faltas maior que a quantidade máxima permitida', () => {
-        cy.get(':nth-child(1) > div > .btn-warning').click()
+        cy.get(':nth-child(1) > .card > .card-body > div > .btn-warning').click()
         cy.get('#aluno').select('Pedro');
         cy.get('#faltas').type(16);
         cy.get('.btn').click();
@@ -59,7 +59,7 @@ describe('Teste de registrar presença/falta dos alunos e consultar faltas', () 
     it('Registrar falta com sucesso', () => {
         let arr = [4, 6, 8, 0, 2, 1];
         for (let i = 1; i <= 6; i++) { 
-            cy.get(`:nth-child(${i}) > div > .btn-warning`).click();
+            cy.get(`:nth-child(${i}) > .card > .card-body > div > .btn-warning`).click();
             cy.get('#aluno').select('Pedro');
             cy.get('#faltas').type(arr[i-1]);
             cy.get('.btn').click();
@@ -70,13 +70,13 @@ describe('Teste de registrar presença/falta dos alunos e consultar faltas', () 
     it('Consultar faltas' ,() => {
         cy.visit('/');
         cy.get('form > :nth-child(2) > input').type('0102');
-        cy.get(':nth-child(3) > input').type('123');
+        cy.get('form > :nth-child(3) > input').type('123');
         cy.get('button').click();
         cy.get('#menu-toggle').click();
         cy.get('[href="/materias/"]').click();
         /*cy.scrollTo('bottom');
-        cy.get('tbody > :nth-child(1) > :nth-child(2)').scrollIntoView();
-        cy.get('tbody > :nth-child(1) > :nth-child(2)').should('be.visible');*/
+        cy.get('tbody > :nth-child(1) > :nth-child(2)').scrollIntoView();*/
+        cy.get('tbody > :nth-child(1) > :nth-child(2)').should('be.visible');
     })
     })
 
