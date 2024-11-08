@@ -45,7 +45,7 @@ describe('Teste de dados pessoais', () => {
     beforeEach(() => {
         cy.visit('/');
         cy.get('form > :nth-child(2) > input').type('0102');
-        cy.get(':nth-child(3) > input').type('123');
+        cy.get('form > :nth-child(3) > input').type('123');
         cy.get('button').click();
         cy.get('#menu-toggle').click();
         cy.get('[href="/usuario/"]').click();
