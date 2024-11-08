@@ -32,7 +32,7 @@ describe('Teste de aluno visualizar horários das disciplinas', () => {
     beforeEach(() => {
         cy.visit('/');
         cy.get('form > :nth-child(2) > input').type('1234');
-        cy.get(':nth-child(3) > input').type('123');
+        cy.get('form > :nth-child(3) > input').type('123');
         cy.get('button').click();
         cy.get('#menu-toggle').click();
         cy.get('[href="/materias/"]').click();
