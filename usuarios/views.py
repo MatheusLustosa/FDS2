@@ -308,35 +308,36 @@ def adicionar_faltas(request, materia_id):
     })
 
 @login_required
-def adicionar_notas(request, materia_id):
+def adicionar_faltas(request, materia_id):
     # Verifica se o usuário logado é um professor
-    usuario = request.user.usuario.first()  # Acessa o objeto do usuário
     error_message = False
     alunos = Usuario.objects.filter(tipo_usuario='aluno')
-
+    usuario = request.user.usuario.first()  # Acessa o objeto do usuário
     if usuario is None or usuario.tipo_usuario != 'professor':
         return redirect('listar_materias')  # Redireciona se não for professor
+
     # Obtém a matéria relacionada
     materia = get_object_or_404(Materia, id=materia_id)
 
-    # Lógica para adicionar notas
+    # Lógica para adicionar faltas
     if request.method == 'POST':
         # Capture os dados do formulário
-        if not(float(request.POST.get('nota')) > 10 or float(request.POST.get('nota')) < 0) :
-            aluno_id = request.POST.get('aluno')  # O ID do aluno que receberá a nota
-            nota = float(request.POST.get('nota'))# A nota a ser atribuída
-            data = timezone.now().date()
-        # data = timezone.now().date()  # Usa a data atual
 
-        # Cria um novo registro de nota
-            Nota.objects.create(aluno_id=aluno_id, materia=materia, nota=nota, data=data)
-            return redirect('listar_materias')  # Redireciona após a adição da nota
-        else :
-            error_message = 'Insira uma nota válida'
-    
+        if not(int(request.POST.get('faltas', 0)) < 0 or int(request.POST.get('faltas', 0)) > 15) :
+            aluno_id = request.POST.get('aluno')  # O ID do aluno que receberá a falta
+            faltas = int(request.POST.get('faltas', 0))  # A quantidade de faltas a serem atribuídas
+            data = timezone.now().date()  # Usa a data atual
+
+        # Cria um novo registro de falta
+            RegistroFalta.objects.create(aluno_id=aluno_id, materia=materia, data=data, faltas=faltas)
+            return redirect('listar_materias')  # Redireciona após a adição da falta
+
+        else : 
+            error_message = 'Insira uma quantidade de faltas válida'
     # Obtém a lista de alunos para exibir no formulário
+      # Filtra apenas alunos
 
-    return render(request, 'usuarios/adicionar_notas.html', {
+    return render(request, 'usuarios/adicionar_faltas.html', {
         'materia_id': materia_id,
         'materia': materia,
         'alunos': alunos,
