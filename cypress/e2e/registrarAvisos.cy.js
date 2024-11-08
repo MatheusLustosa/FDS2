@@ -32,7 +32,7 @@ describe('Teste de aluno visualizar informações dos professores', () => {
     beforeEach(() => {
         cy.visit('/');
         cy.get('form > :nth-child(2) > input').type('1212');
-        cy.get(':nth-child(3) > input').type('123');
+        cy.get('form > :nth-child(3) > input').type('123');
         cy.get('button').click();
     })
 
@@ -43,7 +43,7 @@ describe('Teste de aluno visualizar informações dos professores', () => {
         cy.get('input[type="date"]').type('2024-10-16');
         cy.get('#ativo').click();
         cy.get('.btn').click();
-        cy.get('ul').children().last().invoke('text').should('have.string', 'Tech design');
+        cy.get('.overflow-auto').children().last().invoke('text').should('have.string', 'Tech design');
     })
 
     it('Mensagem "não ativa" não deve ser visualizado por aluno', () => {
@@ -52,7 +52,7 @@ describe('Teste de aluno visualizar informações dos professores', () => {
         cy.get('#conteudo').type('Evento para apresentação de vários projetos');
         cy.get('input[type="date"]').type('2024-10-16');
         cy.get('.btn').click();
-        cy.get('ul').children().should('have.length', 1);    
+        cy.get('.overflow-auto').children().should('have.length', 1);    
     })
 
     after(() => {
