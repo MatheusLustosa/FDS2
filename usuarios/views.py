@@ -119,6 +119,7 @@ def notificacoes(request):
 def nova_solicitacao(request):
     mes = datetime.now().month
     ano =  datetime.now().year
+    error_message = False
     if request.method == 'POST':
         matricula = request.POST.get('matricula', '')
         tipo_servico = request.POST.get('tipo_servico', '')
@@ -126,14 +127,15 @@ def nova_solicitacao(request):
         descricao = request.POST.get('descricao', '')
 
         if not matricula or not tipo_servico or not motivo or not descricao:
-            messages.error(request, "Todos os campos são obrigatórios.")
-            return render(request, 'usuarios/nova_solicitacao.html',context= {'mes': mes, 'ano' : ano})
+            #messages.error(request, "Todos os campos são obrigatórios.")
+            error_message = "Todos os campos são obrigatórios."
+            return render(request, 'usuarios/nova_solicitacao.html',context= {'mes': mes, 'ano' : ano, 'error_message' : error_message })
 
         try:
             usuario = Usuario.objects.get(matricula=matricula)
         except Usuario.DoesNotExist:
             messages.error(request, "Aluno não encontrado.")
-            return render(request, 'usuarios/nova_solicitacao.html',context= {'mes': mes, 'ano' : ano})
+            return render(request, 'usuarios/nova_solicitacao.html',context= {'mes': mes, 'ano' : ano, 'error_message' : error_message })
 
         Solicitacao.objects.create(
             aluno=usuario,
@@ -143,7 +145,7 @@ def nova_solicitacao(request):
         )
         return redirect('notificacoes')
 
-    return render(request, 'usuarios/nova_solicitacao.html', context= {'mes': mes, 'ano' : ano})
+    return render(request, 'usuarios/nova_solicitacao.html', context= {'mes': mes, 'ano' : ano, 'error_message' : error_message })
 
 from django.shortcuts import render
 from django.utils import timezone
