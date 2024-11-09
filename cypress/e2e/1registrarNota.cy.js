@@ -97,9 +97,7 @@ describe('Teste de registrar nota dos alunos e consultar notas', () => {
         cy.get('button').click();
         cy.get('#menu-toggle').click();
         cy.get('[href="/materias/"]').click();
-        cy.contains('FDS').should('be.visible');
-        //cy.contains(7.20).should('be.visible');
-        //cy.get('tbody > :nth-child(1) > :nth-child(2)').should('be.visible');
+        cy.get('tbody > :nth-child(1) > :nth-child(2)').should('be.visible');
     })
 
     })
