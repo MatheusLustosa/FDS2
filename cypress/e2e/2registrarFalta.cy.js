@@ -105,7 +105,7 @@ describe('Teste de registrar presença/falta dos alunos e consultar faltas', () 
         cy.get('div > [type="submit"]').click();
     })
 
-    after(() => {
+    /*after(() => {
         cy.visit('/admin/');
         cy.get('#auth-user > a').click();
         cy.get('#usuarios-materia > a').click();
@@ -113,5 +113,5 @@ describe('Teste de registrar presença/falta dos alunos e consultar faltas', () 
         cy.get('select').select('Delete selected materias');
         cy.get('.button').click();
         cy.get('div > [type="submit"]').click();
-    })
+    })*/
 })
