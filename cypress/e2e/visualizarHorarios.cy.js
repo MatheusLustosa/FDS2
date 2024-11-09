@@ -39,18 +39,18 @@ describe('Teste de aluno visualizar horários das disciplinas', () => {
     })
 
     it('Visualizar horário com sucesso', () => {
-        cy.get(':nth-child(1) > div > .btn-info').click();
+        cy.get(':nth-child(1) > .card > .card-body > div > .btn-info').click();
         cy.get('#dia').type('segunda e quarta');
         cy.get('#hora_inicio').type('08:15');
         cy.get('#hora_fim').type('10:00');
         cy.get('.btn').click();
-        cy.get(':nth-child(1) > ul').children().last().invoke('text').should('have.string', 'segunda e quarta');
+        cy.get(':nth-child(1) > .card > .card-body > ul').children().last().invoke('text').should('have.string', 'segunda e quarta');
     })
 
     it('Avisar que todas as entradas não foram preenchidas', () => {
-        cy.get(':nth-child(1) > div > .btn-info').click();
+        cy.get(':nth-child(1) > .card > .card-body > div > .btn-info').click();
         cy.get('.btn').click();
-        cy.get('.alert').should('be.visible')
+        cy.get('.alert').should('be.visible');
     })
 
     after(() => {
