@@ -1,4 +1,9 @@
 describe('Teste de aluno visualizar informações dos professores', () => {
+
+    before(() => {
+        cy.exec('python create_superuser.py');
+    })
+
     before(() => {
         cy.visit('/');
         cy.get('p > a').click();
@@ -54,6 +59,29 @@ describe('Teste de aluno visualizar informações dos professores', () => {
         cy.get('.btn').click();
         cy.get('.overflow-auto').children().should('have.length', 1);    
     })
+
+    it('Editar um aviso acadêmico registrado', () => {
+        cy.get('a[href*="editar_aviso"]').first().click();  
+        cy.get('#titulo').should('have.value', 'Tech design');
+        cy.get('#conteudo').should('have.value', 'Evento para apresentação de vários projetos');
+        cy.get('#titulo').clear().type('Tech Design - Novo Evento');
+        cy.get('#conteudo').clear().type('Novo evento para mostrar novas ideias e projetos');
+        cy.get('input[type="date"]').clear().type('2024-11-16'); 
+        cy.get('.btn-success').click();
+
+        cy.get('.overflow-auto').children().last().invoke('text').should('include', 'Tech Design - Novo Evento');
+        cy.get('.overflow-auto').children().last().invoke('text').should('include', 'Novo evento para mostrar novas ideias e projetos');
+        cy.get('.overflow-auto').children().last().invoke('text').should('contain', '2024');
+        cy.get('.overflow-auto').children().last().invoke('text').should('not.contain', 'Inativo'); 
+    });
+
+    it('Deve excluir um aviso', () => {
+        cy.on('window:confirm', (text) => {
+            expect(text).to.contains('Tem certeza de que deseja excluir este aviso?');
+            return true; });
+        cy.get('a[href*="excluir_aviso"]').first().click();
+        cy.get('.overflow-auto').children().should('not.contain', 'Tech Design - Novo Evento');  
+    });
 
     after(() => {
         cy.visit('/admin/');
