@@ -1,4 +1,9 @@
 describe('Teste de solicitar serviços acadêmicos', () => {
+    
+    before(() => {
+        cy.exec('python create_superuser.py');
+    })    
+
     before(() => {
         cy.visit('/');
         cy.get('p > a').click();

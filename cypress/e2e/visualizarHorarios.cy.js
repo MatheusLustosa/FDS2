@@ -1,4 +1,25 @@
 describe('Teste de aluno visualizar horários das disciplinas', () => {
+    
+    before(() => {
+        cy.exec('python create_superuser.py');
+    })
+
+    before(() => {
+        const nomes = ['FDS', 'Logica para computação', 'IHC', 'Fundamentos de projetos: Gestão de projetos', 'PIF', 'Projeto 2']
+        cy.visit('/admin/');
+        cy.get('#id_username').type('pedrogusmao');
+        cy.get('#id_password').type('123');
+        cy.get('.submit-row > input').click();
+        cy.get('#usuarios-materia > a').click();
+
+        for (let i = 0; i < 6; i++) {
+            cy.get('li > .addlink').click();
+            cy.get('#id_nome').type(nomes[i]);
+            cy.get('#id_descricao').type('nada');
+            cy.get('.default').click();
+        } 
+    })
+    
     before(() => {
         cy.visit('/');
         cy.get('p > a').click();
@@ -74,6 +95,16 @@ describe('Teste de aluno visualizar horários das disciplinas', () => {
         cy.get('#changelist-search > div > [type="submit"]').click();
         cy.get('.action-select').click();
         cy.get('select').select('Delete selected users');
+        cy.get('.button').click();
+        cy.get('div > [type="submit"]').click();
+    })
+
+    after(() => {
+        cy.visit('/admin/');
+        cy.get('#auth-user > a').click();
+        cy.get('#usuarios-materia > a').click();
+        cy.get('#action-toggle').click();
+        cy.get('select').select('Delete selected materias');
         cy.get('.button').click();
         cy.get('div > [type="submit"]').click();
     })

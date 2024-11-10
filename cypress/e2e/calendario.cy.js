@@ -1,6 +1,11 @@
 let data = '2024-11-26';
 
 describe('Teste de calendário acadêmico', () => {
+
+    before(() => {
+        cy.exec('python create_superuser.py');
+    })
+
     before(() => {
         cy.visit('/');
         cy.get('p > a').click();

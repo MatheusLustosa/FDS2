@@ -13,6 +13,10 @@
 describe('Teste de dados pessoais', () => {
 
     before(() => {
+        cy.exec('python create_superuser.py');
+    })
+
+    before(() => {
         cy.visit('/');
         cy.get('p > a').click();
         cy.get('form > :nth-child(2) > input').type('0102');
