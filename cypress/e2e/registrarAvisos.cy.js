@@ -1,4 +1,5 @@
 describe('Teste de aluno visualizar informações dos professores', () => {
+    describe('Professor criar avisos', () => {
 
     before(() => {
         cy.exec('python create_superuser.py');
@@ -82,6 +83,28 @@ describe('Teste de aluno visualizar informações dos professores', () => {
         cy.get('a[href*="excluir_aviso"]').first().click();
         cy.get('.overflow-auto').children().should('not.contain', 'Tech Design - Novo Evento');  
     });
+
+    });
+
+    describe('Aluno visualizar avisos', () => {
+        it('Aluno visualizar campos de um aviso registrado', () => {
+            cy.visit('/');
+            cy.get('form > :nth-child(2) > input').type('1212');
+            cy.get('form > :nth-child(3) > input').type('123');
+            cy.get('button').click();
+            cy.get('.btn-primary').click();
+            cy.get('#titulo').type('Tech design');
+            cy.get('#conteudo').type('Evento para apresentação de vários projetos');
+            cy.get('input[type="date"]').type('2024-10-16');
+            cy.get('#ativo').click();
+            cy.get('.btn').click();
+            cy.visit('/');
+            cy.get('form > :nth-child(2) > input').type('0102');
+            cy.get('form > :nth-child(3) > input').type('123');
+            cy.get('button').click();
+            cy.get('.overflow-auto').children().last().invoke('text').should('have.string', 'Tech design');
+        });
+    })
 
     after(() => {
         cy.visit('/admin/');

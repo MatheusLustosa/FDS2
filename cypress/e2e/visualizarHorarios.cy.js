@@ -1,5 +1,6 @@
 describe('Teste de aluno visualizar horários das disciplinas', () => {
-    
+    describe('Professor criar horários', () => {
+
     before(() => {
         cy.exec('python create_superuser.py');
     })
@@ -59,7 +60,7 @@ describe('Teste de aluno visualizar horários das disciplinas', () => {
         cy.get('[href="/materias/"]').click();
     })
 
-    it('Visualizar horário com sucesso', () => {
+    it('Cadastrar horários com sucesso', () => {
         cy.get(':nth-child(1) > .card > .card-body > div > .btn-info').click();
         cy.get('#dia').type('segunda e quarta');
         cy.get('#hora_inicio').type('08:15');
@@ -73,6 +74,22 @@ describe('Teste de aluno visualizar horários das disciplinas', () => {
         cy.get('.btn').click();
         cy.get('.alert').should('be.visible');
     })
+
+    });
+
+    describe('Aluno visualizar horários', () => {
+
+    it('Visualizar horário com sucesso', () => {
+        cy.visit('/');
+        cy.get('form > :nth-child(2) > input').type('0102');
+        cy.get('form > :nth-child(3) > input').type('123');
+        cy.get('button').click();
+        cy.get('#menu-toggle').click();
+        cy.get('[href="/materias/"]').click();
+        cy.get(':nth-child(1) > .card > .card-body > ul').children().last().invoke('text').should('have.string', 'segunda e quarta');
+    })
+
+    });
 
     after(() => {
         cy.visit('/admin/');
