@@ -146,15 +146,20 @@
             </nav>
              <div class="container-fluid">
                 <h1 class="mt-4">Nova Solicitação</h1>
+                {% if error_message %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error_message }}
+                </div>
+                {% endif %}
                 <form method="POST">
                     {% csrf_token %}
                     <div class="mb-3">
                         <label for="matricula">Matrícula:</label>
-                        <input type="text" id="matricula" name="matricula" required class="form-control">
+                        <input type="text" id="matricula" name="matricula" class="form-control">
                     </div>
                     <div class="mb-3">
                         <label for="tipo_servico">Tipo de Serviço:</label>
-                        <select name="tipo_servico" id="tipo_servico" required class="form-control">
+                        <select name="tipo_servico" id="tipo_servico" class="form-control">
                             <option value="turma">Trocar de Turma</option>
                             <option value="matricula">Declaração de Matrícula</option>
                             <option value="irpf">Declaração de Imposto de Renda</option>
@@ -162,11 +167,11 @@
                     </div>
                     <div class="mb-3">
                         <label for="motivo">Motivo:</label>
-                        <input type="text" id="motivo" name="motivo" required class="form-control">
+                        <input type="text" id="motivo" name="motivo" class="form-control">
                     </div>
                     <div class="mb-3">
                         <label for="descricao">Descrição:</label>
-                        <textarea id="descricao" name="descricao" required class="form-control"></textarea>
+                        <textarea id="descricao" name="descricao" class="form-control"></textarea>
                     </div>
                     <button type="submit" class="btn btn-custom">Enviar Solicitação</button>
                     <a href="{% url 'notificacoes' %}" class="btn btn-custom">Voltar para Notificações</a>

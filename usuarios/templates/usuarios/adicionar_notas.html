@@ -79,11 +79,16 @@
             </nav>
             <div class="container-fluid">
                 <h1 class="mt-4">Adicionar Notas</h1>
+                {% if error_message %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error_message }}
+                </div>
+                {% endif %}
                 <form method="post">
                     {% csrf_token %}
                     <div class="mb-3">
                         <label for="aluno" class="form-label">Selecione o Aluno</label>
-                        <select class="form-select" id="aluno" name="aluno" required>
+                        <select class="form-select" id="aluno" name="aluno">
                             {% for aluno in alunos %}
                                 <option value="{{ aluno.id }}">{{ aluno.nome }}</option>
                             {% endfor %}
@@ -91,7 +96,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="nota" class="form-label">Nota</label>
-                        <input type="number" class="form-control" id="nota" name="nota" step="0.01" min="0" max="10" required>
+                        <input type="number" class="form-control" id="nota" name="nota" step="0.01">
                     </div>
                     <button type="submit" class="btn btn-primary">Adicionar Nota</button>
                 </form>

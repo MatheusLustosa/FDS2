@@ -79,6 +79,11 @@
             </nav>
             <div class="container-fluid">
                 <h1 class="mt-4">Adicionar Faltas</h1>
+                {% if error_message %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error_message }}
+                </div>
+                {% endif %}
                 <form method="post">
                     {% csrf_token %}
                     <div class="mb-3">
@@ -91,7 +96,7 @@
                     </div>
                     <div class="mb-3">  
                         <label for="faltas" class="form-label">Número de Faltas</label>
-                        <input type="number" class="form-control" id="faltas" name="faltas" min="0" required>
+                        <input type="number" class="form-control" id="faltas" name="faltas" required>
                     </div>
                     <button type="submit" class="btn btn-primary">Adicionar Faltas</button>
                 </form>

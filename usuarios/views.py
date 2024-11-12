@@ -119,6 +119,7 @@ def notificacoes(request):
 def nova_solicitacao(request):
     mes = datetime.now().month
     ano =  datetime.now().year
+    error_message = False
     if request.method == 'POST':
         matricula = request.POST.get('matricula', '')
         tipo_servico = request.POST.get('tipo_servico', '')
@@ -126,14 +127,15 @@ def nova_solicitacao(request):
         descricao = request.POST.get('descricao', '')
 
         if not matricula or not tipo_servico or not motivo or not descricao:
-            messages.error(request, "Todos os campos são obrigatórios.")
-            return render(request, 'usuarios/nova_solicitacao.html',context= {'mes': mes, 'ano' : ano})
+            #messages.error(request, "Todos os campos são obrigatórios.")
+            error_message = "Todos os campos são obrigatórios."
+            return render(request, 'usuarios/nova_solicitacao.html',context= {'mes': mes, 'ano' : ano, 'error_message' : error_message })
 
         try:
             usuario = Usuario.objects.get(matricula=matricula)
         except Usuario.DoesNotExist:
             messages.error(request, "Aluno não encontrado.")
-            return render(request, 'usuarios/nova_solicitacao.html',context= {'mes': mes, 'ano' : ano})
+            return render(request, 'usuarios/nova_solicitacao.html',context= {'mes': mes, 'ano' : ano, 'error_message' : error_message })
 
         Solicitacao.objects.create(
             aluno=usuario,
@@ -143,7 +145,7 @@ def nova_solicitacao(request):
         )
         return redirect('notificacoes')
 
-    return render(request, 'usuarios/nova_solicitacao.html', context= {'mes': mes, 'ano' : ano})
+    return render(request, 'usuarios/nova_solicitacao.html', context= {'mes': mes, 'ano' : ano, 'error_message' : error_message })
 
 from django.shortcuts import render
 from django.utils import timezone
@@ -215,7 +217,7 @@ def usuario_view(request):
 
     if 'matricula' in request.GET:
         matricula = request.GET['matricula']
-        if matricula:
+        if matricula == request.user.username :
             try:
                 usuario = Usuario.objects.get(matricula=matricula)
             except Usuario.DoesNotExist:
@@ -278,8 +280,46 @@ def listar_materias(request):
         'is_professor': usuario.tipo_usuario == 'professor',  # Para verificar se é professor
     })
 @login_required
+def adicionar_notas(request, materia_id):
+    # Verifica se o usuário logado é um professor
+    usuario = request.user.usuario.first()  # Acessa o objeto do usuário
+    error_message = False
+    alunos = Usuario.objects.filter(tipo_usuario='aluno')
+
+    if usuario is None or usuario.tipo_usuario != 'professor':
+        return redirect('listar_materias')  # Redireciona se não for professor
+    # Obtém a matéria relacionada
+    materia = get_object_or_404(Materia, id=materia_id)
+
+    # Lógica para adicionar notas
+    if request.method == 'POST':
+        # Capture os dados do formulário
+        if not(float(request.POST.get('nota')) > 10 or float(request.POST.get('nota')) < 0) :
+            aluno_id = request.POST.get('aluno')  # O ID do aluno que receberá a nota
+            nota = float(request.POST.get('nota'))# A nota a ser atribuída
+            data = timezone.now().date()
+        # data = timezone.now().date()  # Usa a data atual
+
+        # Cria um novo registro de nota
+            Nota.objects.create(aluno_id=aluno_id, materia=materia, nota=nota, data=data)
+            return redirect('listar_materias')  # Redireciona após a adição da nota
+        else :
+            error_message = 'Insira uma nota válida'
+    
+    # Obtém a lista de alunos para exibir no formulário
+
+    return render(request, 'usuarios/adicionar_notas.html', {
+        'materia_id': materia_id,
+        'materia': materia,
+        'alunos': alunos,
+        'error_message' : error_message,
+    })
+
+@login_required
 def adicionar_faltas(request, materia_id):
     # Verifica se o usuário logado é um professor
+    error_message = False
+    alunos = Usuario.objects.filter(tipo_usuario='aluno')
     usuario = request.user.usuario.first()  # Acessa o objeto do usuário
     if usuario is None or usuario.tipo_usuario != 'professor':
         return redirect('listar_materias')  # Redireciona se não for professor
@@ -290,53 +330,26 @@ def adicionar_faltas(request, materia_id):
     # Lógica para adicionar faltas
     if request.method == 'POST':
         # Capture os dados do formulário
-        aluno_id = request.POST.get('aluno')  # O ID do aluno que receberá a falta
-        faltas = int(request.POST.get('faltas', 0))  # A quantidade de faltas a serem atribuídas
-        data = timezone.now().date()  # Usa a data atual
+
+        if not(int(request.POST.get('faltas', 0)) < 0 or int(request.POST.get('faltas', 0)) > 15) :
+            aluno_id = request.POST.get('aluno')  # O ID do aluno que receberá a falta
+            faltas = int(request.POST.get('faltas', 0))  # A quantidade de faltas a serem atribuídas
+            data = timezone.now().date()  # Usa a data atual
 
         # Cria um novo registro de falta
-        RegistroFalta.objects.create(aluno_id=aluno_id, materia=materia, data=data, faltas=faltas)
-        return redirect('listar_materias')  # Redireciona após a adição da falta
+            RegistroFalta.objects.create(aluno_id=aluno_id, materia=materia, data=data, faltas=faltas)
+            return redirect('listar_materias')  # Redireciona após a adição da falta
 
+        else : 
+            error_message = 'Insira uma quantidade de faltas válida'
     # Obtém a lista de alunos para exibir no formulário
-    alunos = Usuario.objects.filter(tipo_usuario='aluno')  # Filtra apenas alunos
+      # Filtra apenas alunos
 
     return render(request, 'usuarios/adicionar_faltas.html', {
         'materia_id': materia_id,
         'materia': materia,
-        'alunos': alunos
-    })
-
-@login_required
-def adicionar_notas(request, materia_id):
-    # Verifica se o usuário logado é um professor
-    usuario = request.user.usuario.first()  # Acessa o objeto do usuário
-    if usuario is None or usuario.tipo_usuario != 'professor':
-        return redirect('listar_materias')  # Redireciona se não for professor
-
-    
-    # Obtém a matéria relacionada
-    materia = get_object_or_404(Materia, id=materia_id)
-
-    # Lógica para adicionar notas
-    if request.method == 'POST':
-        # Capture os dados do formulário
-        aluno_id = request.POST.get('aluno')  # O ID do aluno que receberá a nota
-        nota = float(request.POST.get('nota'))# A nota a ser atribuída
-        data = timezone.now().date()
-        # data = timezone.now().date()  # Usa a data atual
-
-        # Cria um novo registro de nota
-        Nota.objects.create(aluno_id=aluno_id, materia=materia, nota=nota, data=data)
-        return redirect('listar_materias')  # Redireciona após a adição da nota
-
-    # Obtém a lista de alunos para exibir no formulário
-    alunos = Usuario.objects.filter(tipo_usuario='aluno')  # Filtra apenas alunos
-
-    return render(request, 'usuarios/adicionar_notas.html', {
-        'materia_id': materia_id,
-        'materia': materia,
-        'alunos': alunos
+        'alunos': alunos,
+        'error_message' : error_message,
     })
 
 @login_required
@@ -403,14 +416,18 @@ from django.contrib.auth.decorators import login_required
 @login_required
 def adicionar_horario(request, materia_id):
     materia = get_object_or_404(Materia, id=materia_id)
-
+    error_message = False
+    
     if request.method == 'POST':
         dia = request.POST['dia']
         hora_inicio = request.POST['hora_inicio']
         hora_fim = request.POST['hora_fim']
         
+        if not dia or not hora_inicio or not hora_fim:
+            error_message = 'Deve-se preencher todos os campos'
+            return render(request, 'usuarios/adicionar_horario.html', {'materia': materia, 'error_message': error_message})
         # Cria um novo horário
         Horario.objects.create(materia=materia, dia=dia, hora_inicio=hora_inicio, hora_fim=hora_fim)
         return redirect('listar_materias')  # Redireciona para a página de matérias
 
-    return render(request, 'usuarios/adicionar_horario.html', {'materia': materia})
+    return render(request, 'usuarios/adicionar_horario.html', {'materia': materia, 'error_message': error_message})
