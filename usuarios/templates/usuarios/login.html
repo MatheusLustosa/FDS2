@@ -9,7 +9,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            background: linear-gradient(135deg, #343a40, #495057);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -17,7 +17,7 @@
             margin: 0;
         }
         .container {
-            background-color: #fff;
+            background-color: #e8eaf6;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             padding: 20px;
@@ -79,7 +79,7 @@
     <div class="container">
         <div align="center">
             <img src="{% static 'alpha_sharp_black.png' %}" width="100px" alt="Descrição do GIF" />
-            </div>
+        </div>
         <h2>Login</h2>
         {% if form.non_field_errors %}
             <div class="error">
@@ -91,14 +91,10 @@
         <form method="post">
             {% csrf_token %}
             <div class="form-group">
-                <!--{{ form.username.label_tag }}
-                {{ form.username }}-->
                 <p>Matricula</p>
                 <input type="text" name="username" required>
             </div>
             <div class="form-group">
-                <!--{{ form.password.label_tag }}
-                {{ form.password }}-->
                 <p>Senha</p>
                 <input type="password" name="password" required>
             </div>
